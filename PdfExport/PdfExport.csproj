@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.96.0" />
+    <PackageReference Include="MailKit" Version="3.4.1" />
     <PackageReference Include="Polybioz.HtmlRenderer.PdfSharp.Core" Version="1.0.0" />
     <PackageReference Include="QRCoderNetCore" Version="1.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />

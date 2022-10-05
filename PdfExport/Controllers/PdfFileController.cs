@@ -8,6 +8,10 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System;
+using MimeKit;
+using MimeKit.Text;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace PdfExport.Controllers
 {
@@ -87,6 +91,24 @@ namespace PdfExport.Controllers
             var bytes = ImageToByteArray(qrcodeImage);      
             return File(bytes, "image/jpeg");
 
+        }
+
+        [HttpPost("SendEmail")]
+        public async Task<ActionResult> SendEmail(string body)
+        {
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse("meta9@ethereal.email"));
+            email.To.Add(MailboxAddress.Parse("meta9@ethereal.email"));
+            email.Subject = "test mail";
+            email.Body = new TextPart(TextFormat.Html) { Text=body};
+
+            using var smtp = new SmtpClient();
+            smtp.Connect("smtp.ethereal.email",587,SecureSocketOptions.StartTls);
+            smtp.Authenticate("meta9@ethereal.email", "APwwqACeug7xjb6dmS");
+            smtp.Send(email);
+            smtp.Disconnect(true);
+
+            return Ok();
         }
     }
 }
