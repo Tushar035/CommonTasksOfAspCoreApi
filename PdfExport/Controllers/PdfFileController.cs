@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
 using System.IO;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System;
 
 namespace PdfExport.Controllers
 {
@@ -62,6 +66,26 @@ namespace PdfExport.Controllers
                                );
                 }
             }
+        }
+
+        [HttpGet("imagetobinary")]
+        public byte[] ImageToByteArray(Image img)
+        {
+            MemoryStream ms = new MemoryStream();
+            img.Save(ms, ImageFormat.Jpeg);
+            return ms.ToArray();
+        }
+        [HttpGet("GenrateQRCode")]
+
+        public async Task<ActionResult> GenrateQRCode(string inputText)
+        {
+            QRCodeGenerator qr = new QRCodeGenerator();
+            QRCodeData qRCodeData = qr.CreateQrCode(inputText, QRCodeGenerator.ECCLevel.Q);
+            QRCode qRCode = new QRCode(qRCodeData);
+     
+            Image qrcodeImage = qRCode.GetGraphic(100);
+            var bytes = ImageToByteArray(qrcodeImage);      
+            return File(bytes, "image/jpeg");
 
         }
     }
